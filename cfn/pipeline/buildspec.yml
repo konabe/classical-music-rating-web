@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+  pre_build:
+    commands:
+      - echo 'Start pre_build phase'
+      - npm install -g pnpm
+  build:
+    commands:
+      - echo 'Start build phase'
+      - cd client
+      - pnpm install
+      - pnpm generate
+  post_build:
+    commands:
+      - echo 'Start post_build phase'
+      - aws s3 cp ./dist s3://test-classical-a --recursive
+artifacts:
+  files:
+    - client/dist/**/*
